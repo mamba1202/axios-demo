@@ -2,6 +2,7 @@
   <div class="hello">
     <h3>我是axiosAPP，用来发送请求，拦截响应</h3>
     <button @click="getData">发送请求点击我得到conde社区数据</button>
+    <button @click="postData">发送请求点击我得到conde社区数据</button>
   <ul>
   <li v-for="item in items">
   {{item.title}}
@@ -14,6 +15,7 @@
 Vue.prototype.$http= axios; //将axios绑定到vue实例上，用$http访问
 import axios from 'axios'
 import Vue from 'vue'
+import qs from 'qs'
 export default {
   name: 'HelloWorld',
   data () {
@@ -24,7 +26,7 @@ export default {
   methods:{
     getData(){
       var self = this;
-      this.$http.get('https://cnodejs.org/api/v1/topics?page=1&limit=15',)
+      this.$http.get('https://cnodejs.org/api/v1/topics?page=1&limit=15')
      //对象形式传递参数 推荐使用
      //{
      //  params:{
@@ -32,6 +34,27 @@ export default {
      //  limit: 10 每页显示数量
      // } 
      // }
+      .then(function(res){
+        self.items=res.data.data  
+        //此处的this指向不是当前vue实例 
+        //或者用ES6语法 .then(res=>{})
+         console.log(res.data.data)
+      })
+      .catch(function(err){
+         console.log(err)
+      })
+    }
+  },
+  postData(){
+      var self = this;
+      this.$http.post(url,qs.stringify({
+      params:{
+       page: 1, 
+       limit: 20 
+      }
+      })
+     //对象形式传递参数 推荐使用 post请求只接受from-data形式 安装插件 npm install qs
+     
       .then(function(res){
         self.items=res.data.data  
         //此处的this指向不是当前vue实例 
